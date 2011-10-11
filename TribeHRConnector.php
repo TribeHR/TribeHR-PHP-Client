@@ -6,6 +6,7 @@ class TribeHRConnector
 	private $username;
 	private $api_key;
 	private $subdomain;
+	private $protocol = 'https';
 	
 	public function __construct($subdomain, $username, $api_key)
 	{
@@ -14,13 +15,18 @@ class TribeHRConnector
 		$this->api_key = $api_key;
 	}
 	
+	public function setProtocol($protocol)
+	{
+		$this->protocol = $protocol;
+	}
+	
   function sendRequest($uri, $method = 'GET', $data = '')
   {
     $ch = curl_init();
 
     curl_setopt($ch, CURLOPT_URL,
-      sprintf('http://%s.mytribehr.com%s',
-      $this->subdomain, $uri
+      sprintf('%s://%s.mytribehr.com%s',
+      $this->protocol, $this->subdomain, $uri
     )); 
     
     // Convert data to a string
@@ -30,8 +36,11 @@ class TribeHRConnector
     }
     
     // https
-//	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-//	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+	if($this->protocol == 'https')
+	{
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);		
+	}
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
 	curl_setopt($ch, CURLOPT_HEADER, 0);                                                                           
