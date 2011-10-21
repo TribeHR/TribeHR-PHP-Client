@@ -29,10 +29,10 @@ class TribeHRConnector
       $this->protocol, $this->subdomain, $uri
     )); 
     
-    // Convert data to a string
+    // Convert data to a string, or at least to an array of scalar data
     if(!empty($data) && !is_string($data))
     {
-	    $data = http_build_query($data);
+//	    $data = http_build_query($data);
     }
     
     // https
@@ -49,7 +49,6 @@ class TribeHRConnector
     curl_setopt($ch, CURLOPT_USERAGENT, sprintf("TribeHR PHP Connector/%s", $this->version));
 
       curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        'Content-Type: application/x-www-form-urlencoded; charset=utf-8',
         'Accept: text/xml; charset=utf-8',
       ));
 
@@ -63,6 +62,10 @@ class TribeHRConnector
     else if ($method === 'PUT')
     {
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+	    if(!empty($data) && !is_array($data))
+	    {
+		    $data = http_build_query($data);
+	    }
       	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Length: ' . strlen($data)));
      	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     }
