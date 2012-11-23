@@ -83,7 +83,6 @@ class TribeHRConnector
 
       case 'PUT':
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Length: ' . strlen($data)));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         break;
 
@@ -116,7 +115,7 @@ class TribeHRConnector
   /**
    * Render the given $data in a way that will be understood by cURL
    * Any object that has a multi-dimensional array will need http_build_query called.
-   * Any object that has a file *must* be passed as a plan, single-dimensional array.
+   * Any object that has a file *must* be passed as a plain, single-dimensional array.
    * (notice that the two statements above are mutually exclusive.)
    *
    * @todo: Build in compatibility for multidimensional, file inclusive $data structures
