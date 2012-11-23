@@ -8,16 +8,47 @@ class TribeHRConnector
 	private $subdomain;
 	private $protocol = 'https';
 	
+  /** 
+   * Constructor for a new TribeHRConnector instance
+   * 
+   * @param string $subdomain: The subdomain where your TribeHR site can be found.
+   *                           If your site is normally found at "https://foo.mytribehr.com" this would be "foo"
+   * @param string $username: The username of an account on your TribeHR site that you wish to use to complete the 
+   *                          requests you will make through the connector
+   * @param string $api_key: The API key belonging to the same TribeHR user as the $username value
+   */
 	public function __construct($subdomain, $username, $api_key) {
 		$this->subdomain = $subdomain;
 		$this->username = $username;
 		$this->api_key = $api_key;
 	}
 	
+  /** 
+   * Setter for the $protocol value if you wish to override the 'https' default protocol.
+   * It is strongly recommended to leave this as https
+   *
+   * @param string $protocol: The request protocol to use (only the alpha part: do not include '://')
+   *                          Only current expected values are 'http' or 'https'
+   */
 	public function setProtocol($protocol) {
 		$this->protocol = $protocol;
 	}
 	
+  /**
+   * Execute the given request/submission against the given TribeHR endpoint
+   *
+   * @param uri $uri: the API endpoint path to submit against (eg /users.xml)
+   * @param string $method: (optional) The request method to use (GET, POST, PUT). Default = GET
+   * @param mixed $data: The values to submit against the endpoint for create/edit actions
+   *                     These should be formatted as defined in the documentation including nested sub-objects
+   *                     For any values that represent a file upload: these *must* be a path to the file on your
+   *                      local system, prepended by '@' (this is consistent with cURL standards)
+   *
+   * @throws exception: This untyped exception contains a string with the given curl_error value
+   * 
+   * @return TribeHRConnector: Returns an instance of the connector with the following properties now set:
+   *                           response, code, meta, header
+   */
   function sendRequest($uri, $method = 'GET', $data = '') {
 
     // Initialize the correct formatting for our parameters before using them
@@ -88,10 +119,10 @@ class TribeHRConnector
    * Any object that has a file *must* be passed as a plan, single-dimensional array.
    * (notice that the two statements above are mutually exclusive.)
    *
-   * @todo: build in compatibility for multidimensional, file inclusive $data structures
+   * @todo: Build in compatibility for multidimensional, file inclusive $data structures
    *
-   * @param mixed $data: the value of $data as passed to sendRequest
-   * @return mixed: a CURLOPT_POSTFIELDS-compatible string or array, valid for the request
+   * @param mixed $data: The value of $data as passed to sendRequest
+   * @return mixed: A CURLOPT_POSTFIELDS-compatible string or array, valid for the request
    */
   private function buildData($data) {
 
@@ -114,8 +145,8 @@ class TribeHRConnector
   /**
    * Determine if a given value for $data is intended to be a file submission
    * 
-   * @param mixed $data: a value to be submitted against the API
-   * @return bool: true if the $data value contains a signal that it is an intended file upload
+   * @param mixed $data: A value to be submitted against the API
+   * @return bool: True if the $data value contains a signal that it is an intended file upload
    */
   private function filesSubmitted($data) {
     // Are there any files? (first character of the value is an '@')
