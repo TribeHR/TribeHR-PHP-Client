@@ -39,7 +39,7 @@ class TribeHRConnector
    *
    * @param uri $uri: the API endpoint path to submit against (eg /users.xml)
    * @param string $method: (optional) The request method to use (GET, POST, PUT). Default = GET
-   * @param mixed $data: The values to submit against the endpoint for create/edit actions
+   * @param mixed $data: The values to submit against the endpoint for create/edit actions, expected as an array
    *                     These should be formatted as defined in the documentation including nested sub-objects
    *                     For any values that represent a file upload: these *must* be a path to the file on your
    *                      local system, prepended by '@' (this is consistent with cURL standards)
