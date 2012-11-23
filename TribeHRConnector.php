@@ -149,19 +149,21 @@ class TribeHRConnector
    * @return bool: True if the $data value contains a signal that it is an intended file upload
    */
   private function filesSubmitted($data) {
-    // Are there any files? (first character of the value is an '@')
-    $filesPresent = false;
+    // Are there any files? (first character of the value is an '@': see comments on sendRequest)
 
     if (is_array($data)) {
       foreach ($data as $currentProperty) {
-        $filesPresent = ($filesPresent || $this->filesSubmitted($currentProperty));
+        if ($this->filesSubmitted($currentProperty)) {
+          return true;
+        }
       }
-    } else {
-      // We have a single attribute. If it is a file, it should start with '@' (cURL standard)
-      $filesPresent = (substr($data, 0, 1) == '@');
+
+      // Went through each element of the array and found no files
+      return false;
     }
 
-    return $filesPresent;
+    // We have a single attribute. If it is a file, it should start with '@' (cURL standard)
+    return (substr($data, 0, 1) == '@');
   }
 }
 
