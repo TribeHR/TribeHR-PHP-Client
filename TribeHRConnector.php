@@ -136,9 +136,10 @@ class TribeHRConnector
       return $data;
     }
 
-    // Take our array and run http_build_query over it.
     // This will generate a cURL-compatible request that maps nicely to a multidimensional array on reception.
-    return http_build_query($data);
+    // The optional 2nd and 3rd arguments to http_build_query() are needed to fix inconsistencies 
+    // when running PHP in other server environments. (see: WEB-6684)
+    return http_build_query($data, '', '&');
   }
 
   /**
@@ -165,5 +166,3 @@ class TribeHRConnector
     return (substr($data, 0, 1) == '@');
   }
 }
-
-?>
